@@ -5,7 +5,10 @@ on:
     paths:
       - 'data_raw/**'
       - 'preprocessing/**'
-  workflow_dispatch: # Mengizinkan kita menjalankan workflow secara manual dari tombol di GitHub
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   preprocess-data:
@@ -27,13 +30,14 @@ jobs:
 
       - name: Run Preprocessing Script
         run: |
-          python preprocessing/automate_NathanAlvinoFam.py --input data_raw/credit_risk_dataset.csv --output dataset_preprocessing/credit_risk_clean.csv
+          # Menyesuaikan path output sesuai dengan struktur foldermu saat ini
+          python preprocessing/automate_NathanAlvinoFam.py --input data_raw/credit_risk_dataset.csv --output preprocessing/credit_risk_clean.csv
 
       - name: Commit and Push Clean Data
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add dataset_preprocessing/credit_risk_clean.csv
-          # Jika ada perubahan, commit. Jika tidak ada, jangan sampai error
+          # Menambahkan file yang benar
+          git add preprocessing/credit_risk_clean.csv
           git commit -m "Automated data preprocessing via GitHub Actions" || echo "No changes to commit"
           git push
