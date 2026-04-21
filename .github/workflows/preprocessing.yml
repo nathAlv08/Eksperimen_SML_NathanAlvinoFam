@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v4
@@ -30,15 +32,13 @@ jobs:
 
       - name: Run Preprocessing Script
         run: |
-          # Menyesuaikan path output sesuai dengan struktur foldermu saat ini
           python preprocessing/automate_NathanAlvinoFam.py --input data_raw/credit_risk_dataset.csv --output preprocessing/credit_risk_clean.csv
 
       - name: Commit and Push Clean Data
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          # Menambahkan file yang benar
-          git add preprocessing/credit_risk_clean.csv
+          git add .
           git commit -m "Automated data preprocessing via GitHub Actions" || echo "No changes to commit"
           git pull --rebase origin main
           git push
